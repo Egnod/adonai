@@ -1,6 +1,6 @@
 import typing
 
-from charybdis.app import jwt
+from adonai.app import jwt
 
 from ..user.models import User
 

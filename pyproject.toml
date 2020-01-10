@@ -8,6 +8,10 @@ license = "MIT"
 [tool.poetry.dependencies]
 python = "^3.7"
 sitri = "^0.7.0"
+graphene-sqlalchemy = "^2.2.2"
+flask-migrate = "^2.5.2"
+psycopg2-binary = "^2.8.4"
+passlib = "^1.7.2"
 
 [tool.poetry.dev-dependencies]
 black = "^19.10b0"
