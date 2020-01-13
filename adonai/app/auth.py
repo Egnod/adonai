@@ -3,11 +3,13 @@ import typing
 from adonai.app import jwt
 
 from ..user.models import User
+from ..user.crud import UserCRUD
+from . import db
 
 
 @jwt.authentication_handler
 def authenticate(username: str, password: str) -> typing.Optional[User]:
-    user = User.lookup(username)
+    user = UserCRUD.get_by_login(db.session, username)
 
     if user and user.check_password(password):
         return user

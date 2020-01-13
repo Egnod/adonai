@@ -23,7 +23,7 @@ class User(db.Model):
     domain = db.relationship("Domain", backref="users")
 
     def set_password_hash(self, value: str):
-        self.password_hash = argon2.hash(value)
+        self._password_hash = argon2.hash(value)
 
     password = property(None, set_password_hash)
 
@@ -34,7 +34,7 @@ class User(db.Model):
         return value
 
     def check_password(self, candidate: str) -> bool:
-        return argon2.verify(candidate, self.password_hash)
+        return argon2.verify(candidate, self._password_hash)
 
     @property
     def groups(self) -> List["UserGroup"]:
