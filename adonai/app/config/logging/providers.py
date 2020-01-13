@@ -16,4 +16,3 @@ PROVIDERS: typing.List[LoggingProvider] = []
 
 for provider in PROVIDERS:
     provider.connect(logger)
-

@@ -1,9 +1,10 @@
-from sqlalchemy.dialects.postgresql import UUID, ENUM
+import re
 from uuid import uuid4
+
+from sqlalchemy.dialects.postgresql import ENUM, UUID
 from sqlalchemy.schema import CheckConstraint
 
 from ..app import db
-import re
 
 
 class Permission(db.Model):

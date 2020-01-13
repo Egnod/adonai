@@ -1,10 +1,12 @@
-from sqlalchemy.dialects.postgresql import UUID, ENUM
-from uuid import uuid4
-from sqlalchemy.schema import CheckConstraint
-from passlib.hash import argon2
-from typing import List, Union
-from ..app import db
 import re
+from typing import List, Union
+from uuid import uuid4
+
+from passlib.hash import argon2
+from sqlalchemy.dialects.postgresql import ENUM, UUID
+from sqlalchemy.schema import CheckConstraint
+
+from ..app import db
 
 
 class User(db.Model):
