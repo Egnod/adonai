@@ -3,8 +3,7 @@ from typing import List, Union
 from uuid import uuid4
 
 from passlib.hash import argon2
-from sqlalchemy.dialects.postgresql import ENUM, UUID
-from sqlalchemy.schema import CheckConstraint
+from sqlalchemy.dialects.postgresql import UUID
 
 from ..app import db
 
@@ -27,6 +26,8 @@ class User(db.Model):
 
     password = property(None, set_password_hash)
 
+    internal_auth = db.Column(db.Boolean, server_default="false", nullable=False)
+
     @db.validates("login")
     def login_validate(self, key: str, value: str) -> str:
         assert re.match(r"^[a-z0-9_-]{3,16}$", value) is not None
@@ -43,6 +44,17 @@ class User(db.Model):
     @property
     def permissions(self) -> List["Permission"]:
         return self.get_permissions(groups_exclude=True)
+
+    @property
+    def internal_permissions(self) -> List["Permission"]:
+        permissions = self.permissions
+        internal_permissions_list = []
+
+        for permission in permissions:
+            if permission.type == "internal":
+                internal_permissions_list.append(permission)
+
+        return internal_permissions_list
 
     def get_permissions(
         self, only_names: bool = False, groups_exclude: bool = False
@@ -75,8 +87,8 @@ class UserPermission(db.Model):
 
 class UserGroup(db.Model):
     name = db.Column(db.String, nullable=False)
-    project_id = db.Column(db.Integer, db.ForeignKey("project.id"), nullable=False)
-    project = db.relationship("Project", backref="groups")
+    domain_id = db.Column(db.Integer, db.ForeignKey("domain.id"), nullable=False)
+    domain = db.relationship("Domain", backref="groups")
 
     @property
     def permissions(self) -> List["Permission"]:

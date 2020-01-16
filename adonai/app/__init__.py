@@ -1,10 +1,12 @@
 from flask import Flask
+from flask_graphql import GraphQLView
 from flask_jwt import JWT
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 from .config import Config
 from .mixin import IdModel
+from .permission import sync_internal_permissions
 
 db = SQLAlchemy(model_class=IdModel)
 migrate = Migrate(directory=Config.MIGRATIONS_DIR)
@@ -22,5 +24,11 @@ def create_app() -> Flask:
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+
+    sync_internal_permissions()
+
+    from .api import schema  # isort:skip
+
+    app.add_url_rule("/", view_func=GraphQLView.as_view("graphql", schema=schema))
 
     return app

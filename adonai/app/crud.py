@@ -9,6 +9,10 @@ class CRUDBase(metaclass=ABCMeta):
     model: DeclarativeMeta = None
 
     @classmethod
+    def exists(cls, session: Session, id: int) -> bool:
+        return bool(cls.get(session, id))
+
+    @classmethod
     def objects(cls, session: Session) -> typing.List[typing.Optional[DeclarativeMeta]]:
         return session.query(cls.model).all()
 

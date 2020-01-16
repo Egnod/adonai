@@ -1,21 +1,25 @@
 import re
-from uuid import uuid4
 
-from sqlalchemy.dialects.postgresql import ENUM, UUID
-from sqlalchemy.schema import CheckConstraint
+from sqlalchemy.dialects.postgresql import ENUM
+from sqlalchemy.schema import CheckConstraint, UniqueConstraint
 
 from ..app import db
 
 
 class Permission(db.Model):
     project_id = db.Column(db.Integer, db.ForeignKey("project.id"))
-    name = db.Column(db.String, nullable=False, unique=True)
+    name = db.Column(db.String, nullable=False)
     description = db.Column(db.Text)
     type = db.Column(ENUM("internal", "action", "object", name="permission_type"))
 
     project = db.relationship("Project", backref="permissions")
 
-    __table_args__ = (CheckConstraint("NOT(project_id IS NULL AND type IS NULL)"),)
+    __table_args__ = (
+        CheckConstraint("NOT(project_id IS NULL AND type IS NULL)"),
+        UniqueConstraint(
+            "name", "type", name="unique_name_and_type_on_permission_table"
+        ),
+    )
 
     @db.validates("name")
     def name_validate(self, key: str, value: str) -> str:

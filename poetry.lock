@@ -196,6 +196,19 @@ docs = ["sphinx", "pallets-sphinx-themes", "sphinxcontrib-log-cabinet", "sphinx-
 dotenv = ["python-dotenv"]
 
 [[package]]
+category = "main"
+description = "Adds GraphQL support to your Flask application"
+name = "flask-graphql"
+optional = false
+python-versions = "*"
+version = "2.0.1"
+
+[package.dependencies]
+flask = ">=0.7.0"
+graphql-core = ">=2.1,<3"
+graphql-server-core = ">=1.1,<2"
+
+[[package]]
 category = "dev"
 description = "JWT token authentication for Flask apps"
 name = "flask-jwt"
@@ -311,6 +324,18 @@ version = "2.0.1"
 graphql-core = ">=2.2,<3"
 promise = ">=2.2,<3"
 six = ">=1.12"
+
+[[package]]
+category = "main"
+description = "GraphQL Server tools for powering your server"
+name = "graphql-server-core"
+optional = false
+python-versions = "*"
+version = "1.1.3"
+
+[package.dependencies]
+graphql-core = ">=2.1,<3"
+promise = "*"
 
 [[package]]
 category = "dev"
@@ -834,7 +859,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "contextlib2", "unittest2"]
 
 [metadata]
-content-hash = "470a6671995150679918378c37ca33046cbcff7ac628031c205671439b0f96e5"
+content-hash = "d11010dcb83546dd7a998af55401ee9a925ced3d3b27bd3ab8d6f3253b4c47a6"
 python-versions = "^3.7"
 
 [metadata.files]
@@ -952,6 +977,9 @@ flask = [
     {file = "Flask-1.1.1-py2.py3-none-any.whl", hash = "sha256:45eb5a6fd193d6cf7e0cf5d8a5b31f83d5faae0293695626f539a823e93b13f6"},
     {file = "Flask-1.1.1.tar.gz", hash = "sha256:13f9f196f330c7c2c5d7a5cf91af894110ca0215ac051b5844701f2bfd934d52"},
 ]
+flask-graphql = [
+    {file = "Flask-GraphQL-2.0.1.tar.gz", hash = "sha256:825578c044df436cd74503a38bbd31c919a90acda5e9b6e0e45736964bc5235d"},
+]
 flask-jwt = [
     {file = "Flask-JWT-0.3.2.tar.gz", hash = "sha256:49c0672fbde0f1cd3374bd834918d28956e3c521c7e00089cdc5380d323bd0ad"},
 ]
@@ -982,6 +1010,9 @@ graphql-core = [
 graphql-relay = [
     {file = "graphql-relay-2.0.1.tar.gz", hash = "sha256:870b6b5304123a38a0b215a79eace021acce5a466bf40cd39fa18cb8528afabb"},
     {file = "graphql_relay-2.0.1-py3-none-any.whl", hash = "sha256:ac514cb86db9a43014d7e73511d521137ac12cf0101b2eaa5f0a3da2e10d913d"},
+]
+graphql-server-core = [
+    {file = "graphql-server-core-1.1.3.tar.gz", hash = "sha256:fa810f811cd91dd938ac49819562c3a12f2b6bf141164f984b16359359133983"},
 ]
 identify = [
     {file = "identify-1.4.9-py2.py3-none-any.whl", hash = "sha256:72e9c4ed3bc713c7045b762b0d2e2115c572b85abfc1f4604f5a4fd4c6642b71"},
