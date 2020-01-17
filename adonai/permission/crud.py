@@ -36,3 +36,10 @@ class PermissionCRUD(CRUDBase):
                             "type": "internal",
                         },
                     )
+
+    @classmethod
+    def is_active(cls, session, id: int) -> bool:
+        permission: Permission = cls.get(session, id)
+
+        if permission:
+            return permission.is_active

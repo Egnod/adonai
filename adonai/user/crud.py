@@ -4,6 +4,7 @@ from .models import (
     UserGroup,
     UserGroupMember,
     UserGroupPermission,
+    UserGroupMember,
     UserPermission,
 )
 
@@ -36,13 +37,48 @@ class UserCRUD(CRUDBase):
 class UserGroupCRUD(CRUDBase):
     model = UserGroup
 
+    @classmethod
+    def is_active(cls, session, id: int) -> bool:
+        user_group: UserGroup = cls.get(session, id)
+
+        if user_group:
+            return user_group.is_active
+
 
 class UserGroupMemberCRUD(CRUDBase):
     model = UserGroupMember
 
+    @classmethod
+    def get_by_pair(cls, session, group_id: int, user_id: int):
+        return UserGroupMember.query.filter_by(
+            group_id=group_id, user_id=user_id
+        ).first()
+
+    @classmethod
+    def is_unique(cls, session, group_id: int, user_id: int):
+        return not (
+            UserGroupMember.query.filter_by(group_id=group_id, user_id=user_id).count()
+            == True
+        )
+
 
 class UserGroupPermissionCRUD(CRUDBase):
     model = UserGroupPermission
+
+    @classmethod
+    def get_by_pair(cls, session, group_id: int, permission_id: int):
+        return UserGroupPermission.query.filter_by(
+            group_id=group_id, permission_id=permission_id
+        ).first()
+
+    @classmethod
+    def is_unique(cls, session, group_id: int, permission_id: int):
+        return not (
+            UserGroupPermission.query.filter_by(
+                group_id=group_id, permission_id=permission_id
+            ).count()
+            == True
+        )
 
 
 class UserPermissionCRUD(CRUDBase):

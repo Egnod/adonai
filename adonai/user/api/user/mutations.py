@@ -1,3 +1,6 @@
+from http import HTTPStatus
+
+
 import graphene as gph
 from flask import abort
 
@@ -7,6 +10,7 @@ from ....domain.crud import DomainCRUD
 from ....app import db
 from ....app.decorators import permissions_required
 from ...permission import UserPermissions, UserPermissionPermissions
+from ....permission.crud import PermissionCRUD
 
 
 class CreateUser(gph.Mutation):
@@ -22,6 +26,8 @@ class CreateUser(gph.Mutation):
 
     @permissions_required(UserPermissions.create)
     def mutate(self, root, **arguments):
+        if not DomainCRUD.is_active(db.session, arguments["domain_id"]):
+            abort(HTTPStatus.LOCKED)
 
         user = UserCRUD.create(db.session, arguments)
 
@@ -45,10 +51,10 @@ class UpdateUser(gph.Mutation):
         user_status = UserCRUD.is_active(db.session, id)
 
         if user_status is None:
-            abort(404)
+            abort(HTTPStatus.NOT_FOUND)
 
         elif not user_status:
-            abort(423)
+            abort(HTTPStatus.LOCKED)
 
         user = UserCRUD.update(db.session, id, arguments)
 
@@ -67,10 +73,10 @@ class ToggleUser(gph.Mutation):
         user = UserCRUD.get(db.session, id)
 
         if not user:
-            abort(404)
+            abort(HTTPStatus.NOT_FOUND)
 
         if not DomainCRUD.is_active(db.session, user.domain_id):
-            abort(423)
+            abort(HTTPStatus.LOCKED)
 
         user = UserCRUD.update(db.session, id, {"is_active": is_active})
 
@@ -87,17 +93,20 @@ class DelegatePermissionUser(gph.Mutation):
     @permissions_required(UserPermissionPermissions.create)
     def mutate(self, root, **argumnets):
         user_status = UserCRUD.is_active(db.session, argumnets["user_id"])
+        permission_status = PermissionCRUD.is_active(
+            db.session, argumnets["permission_id"]
+        )
 
-        if user_status is None:
-            abort(404)
+        if user_status is None or permission_status is None:
+            abort(HTTPStatus.NOT_FOUND)
 
-        elif not user_status:
-            abort(423)
+        elif not user_status or not permission_status:
+            abort(HTTPStatus.LOCKED)
 
         if not UserPermissionCRUD.is_unique(
             db.session, argumnets["user_id"], argumnets["permission_id"]
         ):
-            abort(409)
+            abort(HTTPStatus.CONFLICT)
 
         UserPermissionCRUD.create(db.session, argumnets)
 
@@ -119,7 +128,7 @@ class DemotePermissionUser(gph.Mutation):
         user_permission = UserPermissionCRUD.get_by_pair(db.session, **argumnets)
 
         if not user_permission:
-            abort(404)
+            abort(HTTPStatus.NOT_FOUND)
 
         UserPermissionCRUD.delete(db.session, user_permission.id)
 

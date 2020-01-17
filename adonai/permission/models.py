@@ -14,6 +14,8 @@ class Permission(db.Model):
 
     project = db.relationship("Project", backref="permissions")
 
+    is_active = db.Column(db.Boolean, server_default="true", nullable=False)
+
     __table_args__ = (
         CheckConstraint("NOT(project_id IS NULL AND type IS NULL)"),
         UniqueConstraint(

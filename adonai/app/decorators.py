@@ -1,5 +1,6 @@
 import typing
 from functools import wraps
+from http import HTTPStatus
 
 from flask import abort
 from flask_jwt import current_identity, jwt_required
@@ -12,7 +13,7 @@ def auth_required(func: typing.Callable) -> typing.Callable:
     @jwt_required()
     def wrapper(*args, **kwargs) -> typing.Callable:
         if not current_identity:
-            abort(401)
+            abort(HTTPStatus.UNAUTHORIZED)
 
         return func(*args, **kwargs)
 
@@ -39,7 +40,7 @@ def permissions_required(
 
             for permission in permissions:
                 if permission not in current_permissions:
-                    abort(403)
+                    abort(HTTPStatus.FORBIDDEN)
 
             return func(*args, **kwargs)
 

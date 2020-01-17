@@ -1,3 +1,6 @@
+from http import HTTPStatus
+
+
 import graphene as gph
 from flask import abort
 
@@ -35,10 +38,10 @@ class UpdateDomain(gph.Mutation):
         domain_status = DomainCRUD.is_active(db.session, id)
 
         if domain_status is None:
-            abort(404)
+            abort(HTTPStatus.NOT_FOUND)
 
         elif not domain_status:
-            abort(423)
+            abort(HTTPStatus.LOCKED)
 
         domain = DomainCRUD.update(db.session, id, argumnets)
 
@@ -55,7 +58,7 @@ class ToggleDomain(gph.Mutation):
     @permissions_required(DomainPermissions.delete)
     def mutate(self, root, id: int, is_active: bool):
         if not DomainCRUD.exists(db.session, id):
-            abort(404)
+            abort(HTTPStatus.NOT_FOUND)
 
         domain = DomainCRUD.update(db.session, id, {"is_active": is_active})
 

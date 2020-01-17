@@ -75,7 +75,8 @@ class User(db.Model):
 
         if not groups_exclude:
             for group in self.groups:
-                group_permissions.extend(group.permissions)
+                if group.domain.is_active:
+                    group_permissions.extend(group.permissions)
 
         all_permissions = direct_permissions + group_permissions
 
@@ -102,6 +103,8 @@ class UserGroup(db.Model):
     domain_id = db.Column(db.Integer, db.ForeignKey("domain.id"), nullable=False)
     domain = db.relationship("Domain", backref="groups")
 
+    is_active = db.Column(db.Boolean, server_default="true", nullable=False)
+
     @property
     def permissions(self) -> List["Permission"]:
         return [link.permission for link in self.group_permission_linker]
@@ -118,6 +121,8 @@ class UserGroupMember(db.Model):
     group = db.relationship("UserGroup", backref="user_group_member_linker")
     user = db.relationship("User", backref="user_group_member_linker")
 
+    __table_args__ = (UniqueConstraint("user_id", "user_id"),)
+
 
 class UserGroupPermission(db.Model):
     permission_id = db.Column(
@@ -127,3 +132,6 @@ class UserGroupPermission(db.Model):
 
     permission = db.relationship("Permission")
     group = db.relationship("UserGroup", backref="group_permission_linker")
+
+    __table_args__ = (UniqueConstraint("group_id", "permission_id"),)
+
