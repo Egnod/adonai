@@ -1,30 +1,22 @@
 import graphene as gph
-from .types import Domain
-from ..crud import DomainCRUD
+from flask import abort
+
 from ...app import db
 from ...app.decorators import permissions_required
+from ..crud import DomainCRUD
 from ..permission import DomainPermissions
-from flask import abort
+from .types import Domain
 
 
 class CreateDomain(gph.Mutation):
     class Arguments:
-        id = gph.ID(required=True)
         name = gph.String(required=True)
         description = gph.String()
 
     domain = gph.Field(lambda: Domain)
 
     @permissions_required(DomainPermissions.create)
-    def mutate(self, root, id: int, **arguments):
-        domain_status = DomainCRUD.is_active(db.session, id)
-
-        if domain_status is None:
-            abort(404)
-
-        elif not domain_status:
-            abort(423)
-
+    def mutate(self, root, **arguments):
         domain = DomainCRUD.create(db.session, arguments)
 
         return CreateDomain(domain=domain)
@@ -41,8 +33,6 @@ class UpdateDomain(gph.Mutation):
     @permissions_required(DomainPermissions.update)
     def mutate(self, root, id: int, **argumnets):
         domain_status = DomainCRUD.is_active(db.session, id)
-
-        print(domain_status)
 
         if domain_status is None:
             abort(404)

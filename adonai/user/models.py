@@ -4,6 +4,7 @@ from uuid import uuid4
 
 from passlib.hash import argon2
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.schema import UniqueConstraint
 
 from ..app import db
 
@@ -28,6 +29,8 @@ class User(db.Model):
 
     internal_auth = db.Column(db.Boolean, server_default="false", nullable=False)
 
+    is_active = db.Column(db.Boolean, server_default="true", nullable=False)
+
     @db.validates("login")
     def login_validate(self, key: str, value: str) -> str:
         assert re.match(r"^[a-z0-9_-]{3,16}$", value) is not None
@@ -43,11 +46,18 @@ class User(db.Model):
 
     @property
     def permissions(self) -> List["Permission"]:
-        return self.get_permissions(groups_exclude=True)
+        permissions = self.get_permissions(groups_exclude=True)
+        permissions_list = []
+
+        for permission in permissions:
+            if permission.type in ("object", "action"):
+                permissions_list.append(permission)
+
+        return permissions_list
 
     @property
     def internal_permissions(self) -> List["Permission"]:
-        permissions = self.permissions
+        permissions = self.get_permissions(groups_exclude=True)
         internal_permissions_list = []
 
         for permission in permissions:
@@ -83,6 +93,8 @@ class UserPermission(db.Model):
 
     user = db.relationship("User", backref="user_permission_linker")
     permission = db.relationship("Permission")
+
+    __table_args__ = (UniqueConstraint("user_id", "permission_id"),)
 
 
 class UserGroup(db.Model):

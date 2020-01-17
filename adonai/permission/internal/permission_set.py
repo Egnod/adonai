@@ -19,4 +19,3 @@ class InternalPermissionSet:
                 permissions_list.append(attr)
 
         return permissions_list
-

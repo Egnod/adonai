@@ -1,5 +1,3 @@
-import typing
-
 from sqlalchemy.orm.session import Session
 
 from ..app.crud import CRUDBase
@@ -15,4 +13,3 @@ class DomainCRUD(CRUDBase):
 
         if domain is not None:
             return domain.is_active
-
