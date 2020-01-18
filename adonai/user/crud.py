@@ -27,10 +27,7 @@ class UserCRUD(CRUDBase):
     def is_global_active(cls, session, id: int) -> bool:
         user: User = cls.get(session, id)
 
-        if not user:
-            return None
-
-        else:
+        if user is not None:
             return user.domain.is_active and user.is_active
 
 

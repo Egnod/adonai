@@ -37,12 +37,9 @@ class CreateUser(gph.Mutation):
 class UpdateUser(gph.Mutation):
     class Arguments:
         id = gph.ID(required=True)
-        login = gph.String()
         password = gph.String()
         first_name = gph.String()
         last_name = gph.String()
-        internal_auth = gph.Boolean()
-        domain_id = gph.ID()
 
     user = gph.Field(lambda: User)
 

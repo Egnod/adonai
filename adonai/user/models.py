@@ -7,6 +7,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.schema import UniqueConstraint
 
 from ..app import db
+from ..project.crud import ProjectCRUD
 
 
 class User(db.Model):
@@ -67,7 +68,11 @@ class User(db.Model):
         return internal_permissions_list
 
     def get_permissions(
-        self, only_names: bool = False, groups_exclude: bool = False
+        self,
+        only_names: bool = False,
+        groups_exclude: bool = False,
+        exclude_inactive: bool = True,
+        exclude_inactive_project: bool = True,
     ) -> Union[List["Permission"], List[str]]:
         direct_permissions = [link.permission for link in self.user_permission_linker]
 
@@ -82,6 +87,17 @@ class User(db.Model):
 
         if only_names:
             all_permissions = [permission.name for permission in all_permissions]
+
+        if exclude_inactive or exclude_inactive_project:
+            for index, permission in enumerate(all_permissions):
+                if (not permission.is_active and exclude_inactive) or (
+                    exclude_inactive_project
+                    and permission.project_id is not None
+                    and not ProjectCRUD.is_global_active(
+                        db.session, permission.project_id
+                    )
+                ):
+                    del all_permissions[index]
 
         return list(set(all_permissions))
 

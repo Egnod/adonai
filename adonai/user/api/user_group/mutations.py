@@ -34,7 +34,10 @@ class CreateUserGroup(gph.Mutation):
 
     @permissions_required(UserGroupPermissions.create)
     def mutate(self, root, **arguments):
-        if not DomainCRUD.is_active(db.session, arguments["domain_id"]):
+        domain_status = DomainCRUD.is_active(db.session, arguments["domain_id"])
+        if domain_status is None:
+            abort(HTTPStatus.NOT_FOUND)
+        elif not domain_status:
             abort(HTTPStatus.LOCKED)
 
         user_group = UserGroupCRUD.create(db.session, arguments)
@@ -44,6 +47,7 @@ class CreateUserGroup(gph.Mutation):
 
 class UpdateUserGroup(gph.Mutation):
     class Arguments:
+        id = gph.ID(required=True)
         name = gph.String()
 
     user_group = gph.Field(lambda: UserGroup)
@@ -58,7 +62,7 @@ class UpdateUserGroup(gph.Mutation):
         elif not user_group_status:
             abort(HTTPStatus.LOCKED)
 
-        user_group = UpdateUserGroup.update(db.session, id, arguments)
+        user_group = UserGroupCRUD.update(db.session, id, arguments)
 
         return UpdateUserGroup(user_group=user_group)
 
@@ -124,7 +128,7 @@ class DemotePermissionGroup(gph.Mutation):
 
     deleted = gph.Boolean()
 
-    @permissions_required(UserPermissionPermissions.delete)
+    @permissions_required(UserGroupPermissionPermissions.delete)
     def mutate(self, root, **argumnets):
 
         user_group_permission = UserGroupPermissionCRUD.get_by_pair(
@@ -172,7 +176,7 @@ class DelegateUserGroup(gph.Mutation):
 class DemoteUserGroup(gph.Mutation):
     class Arguments:
         user_id = gph.ID(required=True)
-        permission_id = gph.ID(required=True)
+        group_id = gph.ID(required=True)
 
     deleted = gph.Boolean()
 
@@ -184,7 +188,7 @@ class DemoteUserGroup(gph.Mutation):
         if not user_group_user:
             abort(HTTPStatus.NOT_FOUND)
 
-        UserGroupPermissionCRUD.delete(db.session, user_group_user.id)
+        UserGroupMemberCRUD.delete(db.session, user_group_user.id)
 
         return DemoteUserGroup(deleted=True)
 
@@ -194,6 +198,6 @@ class UserGroupMutation(gph.ObjectType):
     update_user_group = UpdateUserGroup.Field()
     toggle_user_group = ToggleUserGroup.Field()
     delegate_permission_to_user_group = DelegatePermissionGroup.Field()
-    demote_permission_from_user_group = DelegatePermissionGroup.Field()
+    demote_permission_from_user_group = DemotePermissionGroup.Field()
     delegate_user_to_user_group = DelegateUserGroup.Field()
     demote_user_from_user_group = DemoteUserGroup.Field()
