@@ -25,7 +25,11 @@ class CreateUser(gph.Mutation):
 
     @permissions_required(UserPermissions.create)
     def mutate(self, root, **arguments):
-        if not DomainCRUD.is_active(db.session, arguments["domain_id"]):
+        domain_status = DomainCRUD.is_active(db.session, arguments["domain_id"])
+        if domain_status is None:
+            abort(HTTPStatus.NOT_FOUND)
+        
+        elif not domain_status:
             abort(HTTPStatus.LOCKED)
 
         user = UserCRUD.create(db.session, arguments)

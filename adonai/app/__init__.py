@@ -29,6 +29,8 @@ def create_app() -> Flask:
 
     from .api import schema  # isort:skip
 
-    app.add_url_rule("/", view_func=GraphQLView.as_view("graphql", schema=schema))
+    app.add_url_rule(
+        "/", view_func=GraphQLView.as_view("graphql", schema=schema, batch=True)
+    )
 
     return app
