@@ -43,3 +43,7 @@ class PermissionCRUD(CRUDBase):
 
         if permission:
             return permission.is_active
+
+    @classmethod
+    def is_unique(cls, session, type: str, name: str) -> bool:
+        return not Permission.query.filter_by(name=name, type=type).count()
