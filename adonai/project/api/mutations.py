@@ -1,15 +1,14 @@
 from http import HTTPStatus
 
-
 import graphene as gph
 from flask import abort
 
-from .types import Project
-from ..crud import ProjectCRUD
 from ...app import db
 from ...app.decorators import permissions_required
-from ..permission import ProjectPermissions
 from ...domain.crud import DomainCRUD
+from ..crud import ProjectCRUD
+from ..permission import ProjectPermissions
+from .types import Project
 
 
 class CreateProject(gph.Mutation):
@@ -79,4 +78,3 @@ class ProjectMutation(gph.ObjectType):
     create_project = CreateProject.Field()
     update_project = UpdateProject.Field()
     toggle_project = ToggleProject.Field()
-

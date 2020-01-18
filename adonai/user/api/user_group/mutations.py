@@ -1,28 +1,27 @@
 from http import HTTPStatus
 
-
 import graphene as gph
 from flask import abort
 
-from ..types import UserGroup
-from ...crud import (
-    UserGroupCRUD,
-    UserCRUD,
-    UserPermissionCRUD,
-    UserGroupPermissionCRUD,
-    UserGroupMemberCRUD,
-)
-from ....domain.crud import DomainCRUD
 from ....app import db
 from ....app.decorators import permissions_required
-from ...permission import (
-    UserPermissions,
-    UserPermissionPermissions,
-    UserGroupPermissions,
-    UserGroupPermissionPermissions,
-    UserGroupUserPermissions,
-)
+from ....domain.crud import DomainCRUD
 from ....permission.crud import PermissionCRUD
+from ...crud import (
+    UserCRUD,
+    UserGroupCRUD,
+    UserGroupMemberCRUD,
+    UserGroupPermissionCRUD,
+    UserPermissionCRUD,
+)
+from ...permission import (
+    UserGroupPermissionPermissions,
+    UserGroupPermissions,
+    UserGroupUserPermissions,
+    UserPermissionPermissions,
+    UserPermissions,
+)
+from ..types import UserGroup
 
 
 class CreateUserGroup(gph.Mutation):

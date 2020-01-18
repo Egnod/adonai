@@ -2,11 +2,11 @@ from ..domain.permission import DomainPermissions
 from ..permission.permission import PermissionPermissions
 from ..project.permission import ProjectPermissions
 from ..user.permission import (
+    UserGroupPermissionPermissions,
+    UserGroupPermissions,
+    UserGroupUserPermissions,
     UserPermissionPermissions,
     UserPermissions,
-    UserGroupPermissions,
-    UserGroupPermissionPermissions,
-    UserGroupUserPermissions,
 )
 
 

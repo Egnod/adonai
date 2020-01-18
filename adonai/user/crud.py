@@ -4,7 +4,6 @@ from .models import (
     UserGroup,
     UserGroupMember,
     UserGroupPermission,
-    UserGroupMember,
     UserPermission,
 )
 

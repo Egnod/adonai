@@ -18,4 +18,3 @@ class ProjectQuery(ObjectType):
     @permissions_required(ProjectPermissions.read)
     def resolve_get_project(self, info, id: int):
         return ProjectCRUD.get(db.session, id)
-

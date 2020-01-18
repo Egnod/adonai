@@ -1,6 +1,5 @@
 from http import HTTPStatus
 
-
 import graphene as gph
 from flask import abort
 

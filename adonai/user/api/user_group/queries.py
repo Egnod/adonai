@@ -18,4 +18,3 @@ class UserGroupQuery(ObjectType):
     @permissions_required(UserGroupPermissions.read)
     def resolve_get_user_group(self, info, id: int):
         return UserGroupCRUD.get(db.session, id)
-

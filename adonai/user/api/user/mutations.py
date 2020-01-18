@@ -1,16 +1,15 @@
 from http import HTTPStatus
 
-
 import graphene as gph
 from flask import abort
 
-from ..types import User
-from ...crud import UserCRUD, UserPermissionCRUD
-from ....domain.crud import DomainCRUD
 from ....app import db
 from ....app.decorators import permissions_required
-from ...permission import UserPermissions, UserPermissionPermissions
+from ....domain.crud import DomainCRUD
 from ....permission.crud import PermissionCRUD
+from ...crud import UserCRUD, UserPermissionCRUD
+from ...permission import UserPermissionPermissions, UserPermissions
+from ..types import User
 
 
 class CreateUser(gph.Mutation):

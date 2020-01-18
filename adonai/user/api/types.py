@@ -1,9 +1,9 @@
-from graphene_sqlalchemy import SQLAlchemyObjectType
 import graphene as gph
+from graphene_sqlalchemy import SQLAlchemyObjectType
 
+from ...permission.api.types import Permission
 from ..models import User as UserModel
 from ..models import UserGroup as UserGroupModel
-from ...permission.api.types import Permission
 
 
 class UserGroup(SQLAlchemyObjectType):

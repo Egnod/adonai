@@ -18,4 +18,3 @@ class UserQuery(ObjectType):
     @permissions_required(UserPermissions.read)
     def resolve_get_user(self, info, id: int):
         return UserCRUD.get(db.session, id)
-

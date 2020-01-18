@@ -150,4 +150,3 @@ class UserGroupPermission(db.Model):
     group = db.relationship("UserGroup", backref="group_permission_linker")
 
     __table_args__ = (UniqueConstraint("group_id", "permission_id"),)
-
