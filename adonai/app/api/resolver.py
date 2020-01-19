@@ -1,11 +1,13 @@
-from ..decorators import permissions_required
+from typing import List, Union
+
 from ...permission.internal.permission import InternalPermission
-from ..crud import CRUDBase
-from typing import Union, List
-from .. import db
+from ..decorators import permissions_required
 
 
-def permissionable_relation_resolver(permissions: Union[InternalPermission, List[InternalPermission]], relation_attribute_name: str):
+def permissionable_relation_resolver(
+    permissions: Union[InternalPermission, List[InternalPermission]],
+    relation_attribute_name: str,
+):
     @permissions_required(permissions)
     def resolver(root, info):
         relation = getattr(root, relation_attribute_name, None)

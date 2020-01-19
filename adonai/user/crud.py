@@ -12,6 +12,10 @@ class UserCRUD(CRUDBase):
     model = User
 
     @classmethod
+    def get_by_uuid(Cls, session, uuid: str):
+        return User.query.filter_by(uuid=uuid).first()
+
+    @classmethod
     def get_by_login(cls, session, login: str) -> User:
         return User.query.filter_by(login=login).first()
 
