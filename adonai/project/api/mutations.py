@@ -32,7 +32,7 @@ class CreateProject(gph.Mutation):
 class UpdateProject(gph.Mutation):
     class Arguments:
         id = gph.ID(required=True)
-        name = gph.String(required=True)
+        name = gph.String()
         description = gph.String()
 
     project = gph.Field(lambda: Project)
