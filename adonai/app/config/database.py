@@ -7,7 +7,7 @@ from .base import BaseConfig
 class DataBaseConfig:
     DB_USER = conf.get_credential("db_user", "adonai_user")
     DB_PORT = conf.get_credential("db_port", "5432")
-    DB_NAME = conf.get_credential("db_user", "adonai")
+    DB_NAME = conf.get_credential("db_name", "adonai")
     DB_PASSWORD = conf.get_credential("db_password", "adonai_password")
     DB_HOST = conf.get_credential("db_host", "localhost")
 
