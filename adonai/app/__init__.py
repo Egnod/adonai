@@ -12,8 +12,9 @@ db = SQLAlchemy(model_class=IdModel)
 migrate = Migrate(directory=Config.MIGRATIONS_DIR)
 jwt = JWT()
 
+init_internal_permissions()
+
 from .models import *  # isort:skip
-from .resources import *  # isort:skip
 from .auth import *  # isort:skip
 
 
@@ -24,8 +25,6 @@ def create_app() -> Flask:
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
-
-    init_internal_permissions()
 
     from .api import schema  # isort:skip
 
