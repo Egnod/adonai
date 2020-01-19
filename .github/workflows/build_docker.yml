@@ -1,0 +1,24 @@
+name: Push Adonai to docker.hub
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Set up Python 3.7
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.7
+    - name: Build
+      run: |
+        docker build -t adonai .
+        docker tag adonai egnod/adonai
+    - name: Push
+      run: |
+        docker login --username egnod --password ${{ secrets.DOCKER_HUB_TOKEN }}
+        docker push egnod/adonai:latest
+
