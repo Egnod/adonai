@@ -6,7 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 from .config import Config
 from .mixin import IdModel
-from .permission import sync_internal_permissions
+from .permission import init_internal_permissions
 
 db = SQLAlchemy(model_class=IdModel)
 migrate = Migrate(directory=Config.MIGRATIONS_DIR)
@@ -25,7 +25,7 @@ def create_app() -> Flask:
     migrate.init_app(app, db)
     jwt.init_app(app)
 
-    sync_internal_permissions()
+    init_internal_permissions()
 
     from .api import schema  # isort:skip
 

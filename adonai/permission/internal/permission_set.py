@@ -6,9 +6,6 @@ class InternalPermissionSet:
 
     @classmethod
     def get_permissions(cls):
-        if getattr(cls, "__init_defaults__"):
-            cls.__init_defaults__()
-
         attrs = vars(cls)
         permissions_list = []
 
