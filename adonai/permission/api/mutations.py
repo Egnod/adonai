@@ -8,7 +8,7 @@ from ...app.decorators import permissions_required
 from ...project.crud import ProjectCRUD
 from ..crud import PermissionCRUD
 from ..permission import PermissionPermissions
-from .types import Permission, PermissionModel
+from .types import Permission
 
 
 class CreatePermission(gph.Mutation):

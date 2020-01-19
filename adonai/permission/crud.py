@@ -1,9 +1,4 @@
-from typing import List, Union
-
-from sqlalchemy.orm.session import Session
-
 from ..app.crud import CRUDBase
-from .internal.permission_set import InternalPermissionSet
 from .models import Permission
 
 

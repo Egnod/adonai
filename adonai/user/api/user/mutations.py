@@ -28,7 +28,7 @@ class CreateUser(gph.Mutation):
         domain_status = DomainCRUD.is_active(db.session, arguments["domain_id"])
         if domain_status is None:
             abort(HTTPStatus.NOT_FOUND)
-        
+
         elif not domain_status:
             abort(HTTPStatus.LOCKED)
 
